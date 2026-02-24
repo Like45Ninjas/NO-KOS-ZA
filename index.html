@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NO KOS ZA Toxic Campers | Rust Server</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rust-orange: #ff6b35;
+            --rust-dark: #1a1a1a;
+            --rust-darker: #0d0d0d;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--rust-darker);
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+        
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .bg-grid {
+            background-image: 
+                linear-gradient(rgba(255, 107, 53, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 107, 53, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .glitch {
+            position: relative;
+            animation: glitch-skew 1s infinite linear alternate-reverse;
+        }
+        
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff6b35;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #00fff9;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-anim {
+            0% { clip: rect(30px, 9999px, 15px, 0); }
+            20% { clip: rect(80px, 9999px, 70px, 0); }
+            40% { clip: rect(10px, 9999px, 55px, 0); }
+            60% { clip: rect(60px, 9999px, 25px, 0); }
+            80% { clip: rect(20px, 9999px, 90px, 0); }
+            100% { clip: rect(70px, 9999px, 40px, 0); }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            20% { clip: rect(20px, 9999px, 30px, 0); }
+            40% { clip: rect(90px, 9999px, 10px, 0); }
+            60% { clip: rect(40px, 9999px, 60px, 0); }
+            80% { clip: rect(15px, 9999px, 80px, 0); }
+            100% { clip: rect(55px, 9999px, 20px, 0); }
+        }
+        
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            10% { transform: skew(-2deg); }
+            20% { transform: skew(2deg); }
+            30% { transform: skew(0deg); }
+            100% { transform: skew(0deg); }
+        }
+        
+        .rust-texture {
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d0d0d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ff6b35;
+            border-radius: 4px;
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+        }
+        .feature-card:hover {
+            border-color: #ff6b35;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px -10px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-rust {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .btn-rust:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+        }
+        .btn-rust::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.1) 50%,
+                rgba(255,255,255,0) 100%
+            );
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+        .btn-rust:hover::after {
+            left: 100%;
+        }
+        
+        .toast {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+        }
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #ff6b35 0%, #ffd700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative">
+    <div class="fixed inset-0 bg-grid opacity-30"></div>
+    <div class="fixed inset-0 rust-texture z-50"></div>
+    <div class="fixed inset-0 bg-gradient-to-b from-transparent via-transparent to-black opacity-80 pointer-events-none"></div>
+    
+    <nav class="relative z-40 border-b border-orange-900/30 backdrop-blur-md bg-black/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-sm transform rotate-45 flex items-center justify-center">
+                        <span class="transform -rotate-45 text-black font-bold text-xs">ZA</span>
+                    </div>
+                    <span class="font-orbitron font-bold text-xl tracking-wider text-white">NO KOS<span class="text-orange-500"> ZA</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#status" class="text-gray-300 hover:text-orange-500 transition-colors text-sm tracking-widest uppercase">Status</a>
+                    <a href="#features" class="text-gray-300 hover:text-orange-500 transition-colors text-sm tracking-widest uppercase">Features</a>
+                    <a href="#rules" class="text-gray-300 hover:text-orange-500 transition-colors text-sm tracking-widest uppercase">Rules</a>
+                    <a href="#connect" class="text-gray-300 hover:text-orange-500 transition-colors text-sm tracking-widest uppercase">Connect</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-black/90 border-b border-orange-900/30">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#status" class="block px-3 py-2 text-gray-300 hover:text-orange-500">Status</a>
+                <a href="#features" class="block px-3 py-2 text-gray-300 hover:text-orange-500">Features</a>
+                <a href="#rules" class="block px-3 py-2 text-gray-300 hover:text-orange-500">Rules</a>
+                <a href="#connect" class="block px-3 py-2 text-gray-300 hover:text-orange-500">Connect</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative z-30 pt-20 pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            
+            <!-- BATTLEMETRICS LIVE STATUS BADGE -->
+            <div class="mb-8 inline-block">
+                <a href="https://www.battlemetrics.com/servers/rust/YOUR_SERVER_ID" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-orange-500/30 bg-black/50 hover:bg-orange-500/10 transition-colors">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                    <span class="text-green-400 text-xs tracking-widest uppercase font-bold">Live Status</span>
+                    <span class="text-gray-500 text-xs">via BattleMetrics</span>
+                </a>
+            </div>
+
+            <h1 class="font-orbitron text-4xl md:text-6xl lg:text-7xl font-black mb-6 tracking-tighter">
+                <span class="glitch text-white" data-text="NO KOS">NO KOS</span>
+                <span class="block text-gradient">TOXIC CAMPERS</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-12 max-w-2xl mx-auto font-light">
+                South African Server • No Kill On Sight • 2x Gather • Bi-Weekly Wipes • Anti-Camper Focused
+            </p>
+            
+            <div id="status" class="max-w-3xl mx-auto bg-black/60 backdrop-blur-sm border border-orange-500/20 rounded-lg p-6 md:p-8 transform hover:scale-105 transition-transform duration-300">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-4 h-4 bg-green-500 rounded-full shadow-lg shadow-green-500/50"></div>
+                        <div class="text-left">
+                            <div class="text-sm text-gray-400 uppercase tracking-wider">Server Status</div>
+                            <div class="text-2xl font-bold text-white font-orbitron">ONLINE</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-8 text-center">
+                        <div>
+                            <div class="text-3xl font-bold text-orange-500 font-orbitron">50</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wider">Max Players</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-white font-orbitron">2x</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wider">Gather Rate</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-white font-orbitron">ZA</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wider">Location</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 pt-6 border-t border-gray-800 flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="copyToClipboard('connect 156.155.49.105:28015')" class="btn-rust px-8 py-4 rounded font-bold text-black tracking-wider uppercase flex items-center justify-center gap-2 group">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                        Copy IP Address
+                    </button>
+                    <button onclick="openSteam()" class="px-8 py-4 rounded border-2 border-orange-500 text-orange-500 font-bold tracking-wider uppercase hover:bg-orange-500 hover:text-black transition-all flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                        Connect via Steam
+                    </button>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <p class="text-gray-500 text-sm italic">Click "Live Status" above for real-time player count</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="relative z-30 py-20 bg-black/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="font-orbitron text-3xl md:text-4xl font-bold text-center mb-16 text-white">
+                SERVER <span class="text-orange-500">FEATURES</span>
+            </h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="feature-card bg-gray-900/50 p-6 rounded-lg backdrop-blur-sm">
+                    <div class="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">No KOS Zone</h3>
+                    <p class="text-gray-400">Strict no kill-on-sight rules. Engage in meaningful PvP, not spawn camping. Perfect for builders and PvE-focused players.</p>
+                </div>
+                
+                <div class="feature-card bg-gray-900/50 p-6 rounded-lg backdrop-blur-sm">
+                    <div class="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Anti-Camper System</h3>
+                    <p class="text-gray-400">Active monitoring for door campers and roof campers. We ban toxic camping behavior to ensure fair gameplay.</p>
+                </div>
+                
+                <div class="feature-card bg-gray-900/50 p-6 rounded-lg backdrop-blur-sm">
+                    <div class="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">2x Gather Rates</h3>
+                    <p class="text-gray-400">Faster progression with doubled resource gathering. Spend less time farming, more time building and raiding.</p>
+                </div>
+                
+                <div class="feature-card bg-gray-900/50 p-6 rounded-lg backdrop-blur-sm">
+                    <div class="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Bi-Weekly Wipes</h3>
+                    <p class="text-gray-400">Map wipes every two weeks. BP wipes monthly. Perfect balance between progression and fresh starts.</p>
+                </div>
+                
+                <div class="feature-card bg-gray-900/50 p-6 rounded-lg backdrop-blur-sm">
+                    <div class="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">South African Hosted</h3>
+                    <p class="text-gray-400">Low latency for ZA players. No more playing on EU servers with 200+ ping. Local server, local community.</p>
+                </div>
+                
+                <div class="feature-card bg-gray-900/50 p-6 rounded-lg backdrop-blur-sm">
+                    <div class="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Active Community</h3>
+                    <p class="text-gray-400">50 player cap ensures a tight-knit community. Get to know your neighbors without the chaos of 200+ pop servers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="rules" class="relative z-30 py-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="font-orbitron text-3xl md:text-4xl font-bold text-center mb-12 text-white">
+                SERVER <span class="text-orange-500">RULES</span>
+            </h2>
+            
+            <div class="space-y-4">
+                <div class="flex items-start gap-4 bg-red-900/20 border border-red-500/30 p-4 rounded-lg">
+                    <span class="flex-shrink-0 w-8 h-8 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center font-bold">1</span>
+                    <div>
+                        <h4 class="text-white font-bold mb-1">NO KOS (Kill On Sight)</h4>
+                        <p class="text-gray-400 text-sm">You must communicate before engaging. Raiders must announce intent. Sulfur raids only after warning. No shooting fresh spawns.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start gap-4 bg-orange-900/20 border border-orange-500/30 p-4 rounded-lg">
+                    <span class="flex-shrink-0 w-8 h-8 bg-orange-500/20 text-orange-500 rounded-full flex items-center justify-center font-bold">2</span>
+                    <div>
+                        <h4 class="text-white font-bold mb-1">NO Toxic Camping</h4>
+                        <p class="text-gray-400 text-sm">Door camping is prohibited. Roof camping limited to 10 minutes max. No camping monuments. Play fair or get banned.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start gap-4 bg-yellow-900/20 border border-yellow-500/30 p-4 rounded-lg">
+                    <span class="flex-shrink-0 w-8 h-8 bg-yellow-500/20 text-yellow-500 rounded-full flex items-center justify-center font-bold">3</span>
+                    <div>
+                        <h4 class="text-white font-bold mb-1">No Cheating or Exploits</h4>
+                        <p class="text-gray-400 text-sm">Any scripts, hacks, or game-breaking exploits result in permanent ban. No exceptions, no appeals.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start gap-4 bg-gray-800/50 border border-gray-600/30 p-4 rounded-lg">
+                    <span class="flex-shrink-0 w-8 h-8 bg-gray-500/20 text-gray-400 rounded-full flex items-center justify-center font-bold">4</span>
+                    <div>
+                        <h4 class="text-white font-bold mb-1">Respect the Build</h4>
+                        <p class="text-gray-400 text-sm">No griefing (blocking TC, sealing bases). Raiding is allowed but don't be toxic. Remove your ladders after raiding.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="connect" class="relative z-30 py-20 bg-gradient-to-t from-black to-transparent">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-orbitron text-3xl md:text-4xl font-bold mb-8 text-white">
+                JOIN <span class="text-orange-500">THE COMMUNITY</span>
+            </h2>
+            
+            <div class="bg-gray-900/80 border border-orange-500/30 rounded-lg p-8 backdrop-blur-sm">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="text-left">
+                        <h3 class="text-xl font-bold text-white mb-4">Server Information</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between border-b border-gray-800 pb-2">
+                                <span class="text-gray-500">Server Name</span>
+                                <span class="text-white font-mono">NO KOS ZA Toxic Campers</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-800 pb-2">
+                                <span class="text-gray-500">IP Address</span>
+                                <span class="text-orange-400 font-mono cursor-pointer hover:text-orange-300" onclick="copyToClipboard('156.155.49.105:28015')">156.155.49.105:28015</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-800 pb-2">
+                                <span class="text-gray-500">Map Size</span>
+                                <span class="text-white font-mono">3500</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-800 pb-2">
+                                <span class="text-gray-500">Wipe Schedule</span>
+                                <span class="text-white font-mono">Bi-Weekly (Thu 6PM SAST)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-800 pb-2">
+                                <span class="text-gray-500">Gather Rate</span>
+                                <span class="text-white font-mono">2x</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <a href="#" class="block w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-3 px-6 rounded transition-colors flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                            </svg>
+                            Join Discord
+                        </a>
+                        <button onclick="copyToClipboard('steam://connect/156.155.49.105:28015')" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded transition-colors flex items-center justify-center gap-2 border border-gray-600">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                            </svg>
+                            Steam Connect URL
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="relative z-30 border-t border-gray-800 bg-black py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-gray-500 text-sm">
+                © 2026 NO KOS ZA Toxic Campers. Not affiliated with Facepunch Studios.
+            </div>
+            <div class="flex gap-6 text-sm">
+                <a href="https://www.battlemetrics.com/servers/rust/YOUR_SERVER_ID" target="_blank" class="text-gray-500 hover:text-orange-500 transition-colors">BattleMetrics</a>
+                <a href="#" class="text-gray-500 hover:text-orange-500 transition-colors">Discord</a>
+                <a href="#" class="text-gray-500 hover:text-orange-500 transition-colors">Steam Group</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast fixed bottom-8 right-8 bg-orange-500 text-black px-6 py-4 rounded-lg shadow-2xl font-bold z-50 flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        <span id="toast-message">Copied to clipboard!</span>
+    </div>
+
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copied to clipboard: ' + text);
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('Copied to clipboard!');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function openSteam() {
+            window.location.href = 'steam://connect/156.155.49.105:28015';
+            showToast('Opening Steam...');
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
